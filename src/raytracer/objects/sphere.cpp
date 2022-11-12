@@ -1,6 +1,9 @@
 #include "sphere.h"
-
 #include "../color.hpp"
+
+#include "../scene.h"
+
+#include <cassert>
 
 namespace ray_tracer {
 
@@ -24,8 +27,30 @@ std::optional<Intersection> Sphere::FindIntersection(
   };
 }
 
-Color Sphere::GetColor(ray_tracer::Ray r) {
-  abort();
+Color Sphere::GetColor(ray_tracer::Ray r, Intersection intersection) const {
+  double distance = intersection.distance;
+
+  auto hit = r.from + distance * r.direction;
+
+  auto norm = (hit - center) / radius;
+
+  assert(r.direction * norm <= 1e-3);
+
+  auto reflection_direction = r.direction - (2 * (r.direction * norm)) * norm;
+
+  assert(abs2(reflection_direction) < 1.05);
+  assert(abs2(reflection_direction) > 0.95);
+
+  Ray reflection = {
+      .from = hit,
+      .direction = reflection_direction,
+      .source = id,
+  };
+
+  assert(scene);
+  auto reflection_color = scene->Trace(reflection);
+
+  return reflection_color * 0.5 + Color{0.5, 0, 0};
 }
 
 Sphere::Sphere(ObjectId id, Vector3D center, double radius, Scene* scene)

@@ -13,7 +13,7 @@ struct Intersection {
 
 struct IHittable {
   virtual std::optional<Intersection> FindIntersection(Ray r) const = 0;
-  virtual Color GetColor(Ray r) = 0;
+  virtual Color GetColor(Ray r, Intersection intersection) const = 0;
 };
 
 }

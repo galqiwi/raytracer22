@@ -44,8 +44,12 @@ class ObjectSet
     return output;
   }
 
-  Color GetColor(Ray r) {
-    // TODO
+  Color GetColor(Ray r, Intersection intersection) const {
+    for (const auto& object: objects_) {
+      if (object.id == intersection.with) {
+        return object.GetColor(r, intersection);
+      }
+    }
     abort();
   }
 

@@ -46,7 +46,7 @@ inline double abs2(Vector3D v) {
 }
 
 inline double abs(Vector3D v) {
-  return hypot(v.x, v.y, v.z);
+  return sqrt(abs2(v));
 }
 
 std::ostream& operator<<(std::ostream& out, Vector3D v);

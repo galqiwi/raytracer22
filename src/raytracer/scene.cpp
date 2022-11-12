@@ -9,12 +9,13 @@ Color Scene::Trace(Ray r) {
   Color red = {1, 0, 0};
   auto intersection = spheres.FindIntersection(r);
   if (!intersection) {
-    return {0.5, 0.5, 0.5};
+    double t = (r.direction.y + 1) / 2;
+    return red * t + blue * (1 - t);
+//    return {0.5, 0.5, 0.5};
   }
+  return spheres.GetColor(r, *intersection);
 
-  double t = (intersection->distance - 9) / 2;
 
-  return red * t + blue * (1 - t);
 
 }
 

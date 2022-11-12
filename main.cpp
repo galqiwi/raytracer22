@@ -13,7 +13,8 @@ inline net_bpm_image::Color RenderColor(ray_tracer::Color c) {
 }
 
 int main() {
-  int w = 192, h = 108;
+  int scale = 10;
+  int w = 192 * scale, h = 108 * scale;
 
   ray_tracer::Scene scene;
 
@@ -25,8 +26,8 @@ int main() {
 
   ray_tracer::Camera camera(
       {
-          .width = 192,
-          .height = 108,
+          .width = w,
+          .height = h,
           .width_angle = 1 * 192. / 108.,
           .height_angle = 1,
       }
