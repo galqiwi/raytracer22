@@ -1,5 +1,6 @@
 #pragma once
 
+#include "public.h"
 #include <memory>
 #include <cstddef>
 
@@ -16,8 +17,6 @@ struct INetBpmImage {
   virtual int Height() const = 0;
   virtual void Save(const std::string filename) = 0;
 };
-
-using INetBpmImagePtr = std::shared_ptr<INetBpmImage>;
 
 INetBpmImagePtr MakePPMImage(size_t w, size_t h);
 

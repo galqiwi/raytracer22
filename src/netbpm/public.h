@@ -1,10 +1,12 @@
 #pragma once
 
-#include "public.h"
+#include <memory>
 
 namespace net_bpm_image {
 
 struct Color;
+
 struct INetBpmImage;
+using INetBpmImagePtr = std::shared_ptr<INetBpmImage>;
 
 }
