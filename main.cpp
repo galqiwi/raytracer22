@@ -6,6 +6,7 @@
 #include "src/raytracer/color.hpp"
 #include "src/raytracer/camera.h"
 #include "src/raytracer/ray.h"
+#include "src/raytracer/objects/sphere.h"
 
 inline net_bpm_image::Color RenderColor(ray_tracer::Color c) {
   return {c.r, c.g, c.b};
@@ -15,6 +16,13 @@ int main() {
   int w = 192, h = 108;
 
   ray_tracer::Scene scene;
+
+  std::vector<ray_tracer::Sphere> spheres;
+  spheres.push_back(ray_tracer::Sphere(0,ray_tracer::Vector3D{-1, 0, -10},1, &scene));
+  spheres.push_back(ray_tracer::Sphere(1,ray_tracer::Vector3D{1, 0, -10},1, &scene));
+
+  scene.spheres = ray_tracer::ObjectSet<ray_tracer::Sphere>(std::move(spheres));
+
   ray_tracer::Camera camera(
       {
           .width = 192,

@@ -44,7 +44,7 @@ Ray Camera::GetRay(int x, int y) {
 
   return {
     .from = position_,
-    .to = sin(y_angle) * direction_up_ +
+    .direction = sin(y_angle) * direction_up_ +
           cos(y_angle) *
               (cos(x_angle) * direction_ +
                sin(x_angle) * direction_right_)

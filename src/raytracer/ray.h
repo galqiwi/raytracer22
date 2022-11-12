@@ -5,8 +5,9 @@
 namespace ray_tracer {
 
 struct Ray {
-  // to value should be normalized
-  Vector3D from, to;
+  // direction value should be normalized
+  Vector3D from, direction;
+  ObjectId source = CAMERA;
 };
 
 }

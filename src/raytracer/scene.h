@@ -1,16 +1,19 @@
 #pragma once
 
-#include <cstdint>
 #include "public.h"
+
+#include "objects/sphere.h"
+#include "objects/object_set.hpp"
+
+#include <cstdint>
 
 namespace ray_tracer {
 
-using ObjectId = int64_t;
-const ObjectId IgnoreNothing = -1;
-
 class Scene {
  public:
-  Color Trace(Ray r, ObjectId ignore = IgnoreNothing);
+  Color Trace(Ray r);
+
+  ObjectSet<Sphere> spheres;
 };
 
 }
