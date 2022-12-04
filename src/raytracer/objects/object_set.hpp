@@ -10,10 +10,7 @@
 
 namespace ray_tracer {
 
-template<class T, class U>
-concept Derived = std::is_base_of<U, T>::value;
-
-template <Derived<IHittable> T>
+template <typename T>
 class ObjectSet
     : public IHittable {
  public:
@@ -21,7 +18,7 @@ class ObjectSet
   explicit ObjectSet(std::vector<T> objects) : objects_(std::move(objects)) {
   }
 
-  std::optional<Intersection> FindIntersection(Ray r) const {
+  std::optional<Intersection> FindIntersection(Ray r) const override {
     std::optional<Intersection> output = std::nullopt;
 
     for (const auto& object: objects_) {
@@ -29,6 +26,7 @@ class ObjectSet
         continue;
       }
       auto intersection = object.FindIntersection(r);
+      // TODO: rewrite using GetCloserOne
       if (!output) {
         output = intersection;
         continue;
@@ -44,7 +42,7 @@ class ObjectSet
     return output;
   }
 
-  Color GetColor(Ray r, Intersection intersection) const {
+  Color GetColor(Ray r, Intersection intersection) const override {
     for (const auto& object: objects_) {
       if (object.id == intersection.with) {
         return object.GetColor(r, intersection);

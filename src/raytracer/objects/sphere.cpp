@@ -50,7 +50,7 @@ Color Sphere::GetColor(ray_tracer::Ray r, Intersection intersection) const {
   assert(scene);
   auto reflection_color = scene->Trace(reflection);
 
-  return reflection_color * 0.5 + Color{0.5, 0, 0};
+  return reflection_color * 1.0;// + Color{0.5, 0.5, 0.5};
 }
 
 Sphere::Sphere(ObjectId id, Vector3D center, double radius, Scene* scene)

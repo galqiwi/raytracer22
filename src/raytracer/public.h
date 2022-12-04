@@ -15,4 +15,6 @@ struct Color;
 using ObjectId = int64_t;
 const ObjectId CAMERA = -1;
 
+class Texture;
+
 }

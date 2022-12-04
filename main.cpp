@@ -23,12 +23,14 @@ int main() {
   spheres.push_back(ray_tracer::Sphere(1,ray_tracer::Vector3D{1, 0, -10},1, &scene));
 
   scene.spheres = ray_tracer::ObjectSet<ray_tracer::Sphere>(std::move(spheres));
+  scene.sky = ray_tracer::Cubemap(2, ray_tracer::CubemapTextures());
 
   ray_tracer::Camera camera(
       {
           .width = w,
           .height = h,
           .width_angle = 1 * 192. / 108.,
+//          .width_angle = M_PI,
           .height_angle = 1,
       }
       , {0, 0, 0}, {0, 0, -1}, {0, 1, 0});
