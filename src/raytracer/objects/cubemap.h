@@ -21,6 +21,7 @@ struct Cubemap
   Color GetColor(Ray r, Intersection intersection) const override;
  private:
   ObjectId id_;
+  CubemapTextures textures_;
 };
 
 }

@@ -7,10 +7,7 @@
 #include "src/raytracer/camera.h"
 #include "src/raytracer/ray.h"
 #include "src/raytracer/objects/sphere.h"
-
-inline net_bpm_image::Color RenderColor(ray_tracer::Color c) {
-  return {c.r, c.g, c.b};
-}
+#include "helpers.h"
 
 int main() {
   int scale = 10;
@@ -23,7 +20,8 @@ int main() {
   spheres.push_back(ray_tracer::Sphere(1,ray_tracer::Vector3D{1, 0, -10},1, &scene));
 
   scene.spheres = ray_tracer::ObjectSet<ray_tracer::Sphere>(std::move(spheres));
-  scene.sky = ray_tracer::Cubemap(2, ray_tracer::CubemapTextures());
+
+  scene.sky = ray_tracer::Cubemap(2, ReadCubemapTexturesFromDir("cubemap"));
 
   ray_tracer::Camera camera(
       {
@@ -34,6 +32,8 @@ int main() {
           .height_angle = 1,
       }
       , {0, 0, 0}, {0, 0, -1}, {0, 1, 0});
+
+  std::cout << "loaded textures, rendering..." << std::endl;
 
   auto output = net_bpm_image::MakePPMImage(w, h);
 

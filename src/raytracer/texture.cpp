@@ -22,4 +22,12 @@ Color Texture::Get(int x, int y) const {
   return data_[idx];
 }
 
+int Texture::GetWidth() const {
+  return w_;
+}
+
+int Texture::GetHeight() const {
+  return h_;
+}
+
 }

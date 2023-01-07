@@ -14,6 +14,9 @@ class Texture {
 
   void Set(int x, int y, Color c);
   Color Get(int x, int y) const;
+
+  int GetWidth() const;
+  int GetHeight() const;
  private:
   int w_, h_;
   std::vector<Color> data_;

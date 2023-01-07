@@ -1,11 +1,14 @@
 #include <vector>
+#include <assert.h>
+#include <filesystem>
+
 #include "cubemap.h"
 
 #include "../color.hpp"
 
 namespace ray_tracer {
 
-Cubemap::Cubemap(ObjectId id, CubemapTextures /*textures*/): id_(id) {
+Cubemap::Cubemap(ObjectId id, CubemapTextures textures): id_(id), textures_(textures) {
 }
 
 std::optional<Intersection> Cubemap::FindIntersection(Ray r) const {
@@ -20,7 +23,7 @@ struct CubemapSidePosition {
   Vector3D to_direction;
 };
 
-const auto kNCubeSizes = 6;
+const auto kNCubeSides = 6;
 
 // front, right, back, left, top, bottom
 const auto kCubemapSidePositions = []() {
@@ -52,33 +55,58 @@ const auto kCubemapSidePositions = []() {
 }();
 
 Color Cubemap::GetColor(Ray r, Intersection intersection) const {
-    Color blue =  {0, 0, 1};
-    Color red = {1, 0, 0};
-
-    std::vector<Color> colors = {
-        {0.8, 0.2, 0.2},
-        {0.2, 0.8, 0.2},
-        {0.2, 0.2, 0.8},
-        {0.8, 0.8, 0.2},
-        {0.8, 0.2, 0.8},
-        {0.2, 0.8, 0.8},
-    };
-
-    Color output_color;
     double max_product = 0;
-    for (int i = 0; i < kNCubeSizes; ++i) {
+    int cubeSide = -1;
+    for (int i = 0; i < kNCubeSides; ++i) {
       auto product = kCubemapSidePositions[i].to_direction * r.direction;
       if (max_product < product) {
         max_product = product;
-        output_color = colors[i];
-        auto t = r.direction * kCubemapSidePositions[i].top_direction;
-        t = (t + 1) / 2;
-        output_color = output_color * t;
+        cubeSide = i;
       }
     }
-    return output_color;
-//    double t = (r.direction.y + 1) / 2;
-//    return red * t + blue * (1 - t);
+    assert(cubeSide != -1);
+
+    auto const& cubemapSidePosition = kCubemapSidePositions[cubeSide];
+
+    const Texture* texture = nullptr;
+
+    switch (cubeSide) {
+      case 0:
+        texture = &textures_.front;
+        break;
+      case 1:
+        texture = &textures_.right;
+        break;
+      case 2:
+        texture = &textures_.back;
+        break;
+      case 3:
+        texture = &textures_.left;
+        break;
+      case 4:
+        texture = &textures_.top;
+        break;
+      case 5:
+        texture = &textures_.bottom;
+        break;
+      default:
+        abort();
+    }
+
+    assert(texture != nullptr);
+
+    // r.direction * cubemapSidePosition.top_direction is from -sqrt(2)/2 to sqrt(2)/2
+    auto y = 0.5 - (r.direction * cubemapSidePosition.top_direction) / sqrt(2);
+    auto x = 0.5 - (r.direction * (cubemapSidePosition.top_direction % cubemapSidePosition.to_direction)) / sqrt(2);
+
+    int x_pixel = x * (texture->GetWidth() - 1);
+    int y_pixel = y * (texture->GetHeight() - 1);
+    x_pixel = std::max(0, x_pixel);
+    y_pixel = std::max(0, y_pixel);
+    x_pixel = std::min(texture->GetWidth() - 1, x_pixel);
+    y_pixel = std::min(texture->GetHeight() - 1, y_pixel);
+
+    return texture->Get(x_pixel, y_pixel);
 }
 
 }
